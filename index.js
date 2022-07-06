@@ -23,8 +23,10 @@ let computerSelection;
 // create playerSelection variable
 let playerSelection;
 // create playerScore & computerScore
-let playerScore;
-let computerScore;
+let playerScore = 0;
+let computerScore = 0;
+
+// listen for button push inputs
 const rock = document.querySelector('.rock');
 rock.addEventListener('click', () => {
     singleRound('rock')
@@ -39,14 +41,29 @@ const paper = document.querySelector('.paper');
 paper.addEventListener('click', () => {
     singleRound('paper');
 });
+
+// set writeable paragraphs
+roundResultPara = document.querySelector('.roundResult');
+playerScorePara = document.querySelector('.playerScore');
+computerScorePara = document.querySelector('.computerScore');
 // create victory() and defeat() to keep loops cleaner
 function victory() {
-    console.log(`You picked: ${playerSelection}. Your opponent picked: ${computerSelection}. \nYou won this round!`);
-    playerScore = ++playerScore;
+    playerScore += 1;
+    console.log(playerScore);
+    return (`You picked: ${playerSelection}. Your opponent picked: ${computerSelection}. \nYou won this round!`);
 }
 function defeat() {
-    console.log(`You picked: ${playerSelection}. Your opponent picked: ${computerSelection}. \nYou lost this round!`);
-    computerScore = ++computerScore;
+    computerScore += 1;
+    return (`You picked: ${playerSelection}. Your opponent picked: ${computerSelection}. \nYou lost this round!`);
+}
+
+function endGame(winner) {
+    alert(`${winner} won 5 rounds! ${winner} won the game!`);
+    playerScore = 0;
+    computerScore = 0;
+    playerScorePara.textContent = 'Your score:'
+    computerScorePara.textContent = 'Opponent score:'
+    roundResultPara.textContent = 'No round started.'
 }
 // create singleRound() which plays playSelection against computerSelection
 function singleRound(choice) {
@@ -57,34 +74,40 @@ function singleRound(choice) {
     computerSelection = computerPlay();
     // test for tie, loss, or win in all playerSelection scenarios
     if (playerSelection === computerSelection) {
-        console.log("It was a tie, go again!");
+        roundResultPara.textContent = "It was a tie, go again!";
     }
     else if (playerSelection === "rock") {
         if (computerSelection === "paper") {
-            defeat();    
+            roundResultPara.textContent = defeat();    
         }
         else {
-            victory();
+            roundResultPara.textContent = victory();
         }
     }
     else if (playerSelection === "paper") {
         if (computerSelection === "scissors") {
-            defeat();    
+            roundResultPara.textContent = defeat();    
         }
         else {
-            victory();
+            roundResultPara.textContent = victory();
         }
     }
     else if (playerSelection === "scissors") {
         if (computerSelection === "rock") {
-            defeat();    
+            roundResultPara.textContent = defeat();    
         }
         else {
-            victory();
+            roundResultPara.textContent = victory();
         }
     }
-    else {
-        console.log("Please enter either rock, paper or scissors!")
+    playerScorePara.textContent = `Your score: ${playerScore}`;
+    computerScorePara.textContent = `Opponent score: ${computerScore}`;
+
+    if (playerScore === 5) {
+        endGame('You');
+    }
+    else if (computerScore === 5) {
+        endGame('Your opponent');
     }
 }
 
